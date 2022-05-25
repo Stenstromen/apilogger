@@ -1,0 +1,29 @@
+{
+  "name": "apilogger",
+  "version": "1.0.0",
+  "description": "APILogger",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stenstromen/apilogger.git"
+  },
+  "keywords": [
+    "API",
+    "Node.js",
+    "Javascript",
+    "Express"
+  ],
+  "author": "Stenstromen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stenstromen/apilogger/issues"
+  },
+  "homepage": "https://github.com/Stenstromen/apilogger#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1"
+  }
+}
