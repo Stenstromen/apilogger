@@ -9,10 +9,9 @@ Log data to textfiles, from HTTP POST requests
 * Error logging to err.log
 * Write logfiles with fs.write append
 * Create logfiles if not exist on startup
+* Dockerfile
 
 ## Todo
 * Code Cleanup!
-* Dockerfile
 * Persistent storage instruction for Docker
 * Write API Readme
-

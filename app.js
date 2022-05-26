@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const infolog = "store/logs/info.log";
 const errlog = "store/logs/err.log";
+const readme = "readme.txt";
 const app = express();
 const port = 8080;
 const dateObj = new Date();
@@ -38,8 +39,6 @@ const writeLog = (file, source, logmsg) => {
 
 createLog(infolog);
 createLog(errlog);
-writeLog(errlog, "test");
-console.log(time);
 
 app.use(bodyParser.json());
 let urlencodedParser = bodyParser.urlencoded({ extended: false });
