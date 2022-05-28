@@ -4,6 +4,8 @@ const fs = require("fs");
 const infolog = "store/logs/info.log";
 const errlog = "store/logs/err.log";
 const readme = "readme.txt";
+let readInfoLog = ""
+let readErrLog = "";
 const app = express();
 const port = 8080;
 const dateObj = new Date();
@@ -37,11 +39,39 @@ const writeLog = (file, source, logmsg) => {
   });
 };
 
+const readLog = (file, log) => {
+    if (log === "info") {
+        fs.readFile(file, "utf8", (err, data) => {
+            //console.log(data);
+            //let log = data;
+            readInfoLog = data;
+        })
+    } else if (log === "err") {
+        fs.readFile(file, "utf8", (err, data) => {
+            //console.log(data);
+            //let log = data;
+            readErrLog = data;
+        })
+    }
+}
+
 createLog(infolog);
 createLog(errlog);
 
 app.use(bodyParser.json());
 let urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+app.get("/api/log/info", (req, res) => {
+    readLog(infolog, "info");
+    res.write(readInfoLog);
+    res.end();
+})
+
+app.get("/api/log/err", (req, res) => {
+    readLog(errlog, "err");
+    res.write(readErrLog);
+    res.end();
+})
 
 app.post("/api/log/info", urlencodedParser, function (req, res) {
   response = {
