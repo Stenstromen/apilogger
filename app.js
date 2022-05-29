@@ -3,8 +3,9 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const infolog = "store/logs/info.log";
 const errlog = "store/logs/err.log";
-const readme = "readme.txt";
-let readInfoLog = ""
+const readme = "store/misc/readme.txt";
+let printReadme = "";
+let readInfoLog = "";
 let readErrLog = "";
 const app = express();
 const port = 8080;
@@ -40,20 +41,20 @@ const writeLog = (file, source, logmsg) => {
 };
 
 const readLog = (file, log) => {
-    if (log === "info") {
-        fs.readFile(file, "utf8", (err, data) => {
-            //console.log(data);
-            //let log = data;
-            readInfoLog = data;
-        })
-    } else if (log === "err") {
-        fs.readFile(file, "utf8", (err, data) => {
-            //console.log(data);
-            //let log = data;
-            readErrLog = data;
-        })
-    }
-}
+  if (log === "info") {
+    fs.readFile(file, "utf8", (err, data) => {
+      //console.log(data);
+      //let log = data;
+      readInfoLog = data;
+    });
+  } else if (log === "err") {
+    fs.readFile(file, "utf8", (err, data) => {
+      //console.log(data);
+      //let log = data;
+      readErrLog = data;
+    });
+  }
+};
 
 createLog(infolog);
 createLog(errlog);
@@ -61,17 +62,29 @@ createLog(errlog);
 app.use(bodyParser.json());
 let urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+app.get("/", (req, res) => {
+  res.redirect("/api/readme");
+});
+
+app.get("/api/readme", (req, res) => {
+  fs.readFile(readme, "utf8", (err, data) => {
+    printReadme = data;
+  });
+  res.write(printReadme);
+  res.end();
+});
+
 app.get("/api/log/info", (req, res) => {
-    readLog(infolog, "info");
-    res.write(readInfoLog);
-    res.end();
-})
+  readLog(infolog, "info");
+  res.write(readInfoLog);
+  res.end();
+});
 
 app.get("/api/log/err", (req, res) => {
-    readLog(errlog, "err");
-    res.write(readErrLog);
-    res.end();
-})
+  readLog(errlog, "err");
+  res.write(readErrLog);
+  res.end();
+});
 
 app.post("/api/log/info", urlencodedParser, function (req, res) {
   response = {

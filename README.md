@@ -20,9 +20,9 @@ REGISTRY/APILOGGER
 * Dockerfile
 * Persistent storage instruction for Docker
 * API GET logfile 
+* Write API Readme
 
 ## Todo
 * Code Cleanup!
-* Write API Readme
 * API Key requirement
 * API GET logfile (with limit=rows PARAM)
