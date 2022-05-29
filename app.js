@@ -4,9 +4,11 @@ const fs = require("fs");
 const infolog = "store/logs/info.log";
 const errlog = "store/logs/err.log";
 const readme = "store/misc/readme.txt";
+const apiKeyFile = "store/misc/apikey.js";
 let printReadme = "";
 let readInfoLog = "";
 let readErrLog = "";
+let readApiKey = [];
 const app = express();
 const port = 8080;
 const dateObj = new Date();
@@ -56,8 +58,16 @@ const readLog = (file, log) => {
   }
 };
 
+const getApiKey = () => {
+  fs.readFile(apiKeyFile, "utf8", (err, data) => {
+    readApiKey = JSON.parse(data);
+    //readApiKey.push(JSON.parse(data))
+  });
+};
+
 createLog(infolog);
 createLog(errlog);
+getApiKey();
 
 app.use(bodyParser.json());
 let urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -75,32 +85,57 @@ app.get("/api/readme", (req, res) => {
 });
 
 app.get("/api/log/info", (req, res) => {
-  readLog(infolog, "info");
-  res.write(readInfoLog);
+  if (req.header("x-api-key") === readApiKey[0].key) {
+    console.log("Key correct");
+    readLog(infolog, "info");
+    res.write(readInfoLog);
+  } else {
+    console.log("Key INCORRECT");
+    res.statusCode = 401;
+    res.send("unauthorized");
+  }
   res.end();
 });
 
 app.get("/api/log/err", (req, res) => {
-  readLog(errlog, "err");
-  res.write(readErrLog);
+  if (req.header("x-api-key") === readApiKey[0].key) {
+    readLog(errlog, "err");
+    res.write(readErrLog);
+  } else {
+    console.log("Key INCORRECT");
+    res.statusCode = 401;
+    res.send("unauthorized");
+  }
   res.end();
 });
 
 app.post("/api/log/info", urlencodedParser, function (req, res) {
+    if (req.header("x-api-key") === readApiKey[0].key) {
   response = {
     info: req.body.info,
   };
   writeLog(infolog, req.socket.remoteAddress, response.info);
   res.statusCode = 201;
+} else {
+    console.log("Key INCORRECT");
+    res.statusCode = 401;
+    res.send("unauthorized");
+}
   res.end();
 });
 
 app.post("/api/log/err", urlencodedParser, function (req, res) {
+    if (req.header("x-api-key") === readApiKey[0].key) {
   response = {
     err: req.body.err,
   };
   writeLog(errlog, req.socket.remoteAddress, response.err);
   res.statusCode = 201;
+    } else {
+        console.log("Key INCORRECT");
+        res.statusCode = 401;
+        res.send("unauthorized");
+    }
   res.end();
 });
 
