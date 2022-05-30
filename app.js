@@ -9,21 +9,26 @@ let printReadme = "";
 let readInfoLog = "";
 let readErrLog = "";
 let readApiKey = [];
+let time = "";
 const app = express();
 const port = 8080;
-const dateObj = new Date();
-let year = dateObj.getFullYear();
-let month = dateObj.getMonth();
-let date = dateObj.getDate();
-let hour = dateObj.getHours();
-let minute = dateObj.getMinutes();
-let second = dateObj.getSeconds();
-month = ("0" + month).slice(-2);
-date = ("0" + date).slice(-2);
-hour = ("0" + hour).slice(-2);
-minute = ("0" + minute).slice(-2);
-second = ("0" + second).slice(-2);
-const time = `${year}-${month}-${date} ${hour}:${minute}:${second}`;
+
+const getTime = () => {
+  const dateObj = new Date();
+  let year = dateObj.getFullYear();
+  let month = dateObj.getMonth();
+  let date = dateObj.getDate();
+  let hour = dateObj.getHours();
+  let minute = dateObj.getMinutes();
+  let second = dateObj.getSeconds();
+  month = ("0" + month).slice(-2);
+  date = ("0" + date).slice(-2);
+  hour = ("0" + hour).slice(-2);
+  minute = ("0" + minute).slice(-2);
+  second = ("0" + second).slice(-2);
+  time = `${year}-${month}-${date} ${hour}:${minute}:${second}`;
+}
+
 
 const loadReadme = () => {
   fs.readFile(readme, "utf8", (err, data) => {
@@ -32,6 +37,7 @@ const loadReadme = () => {
 }
 
 const createLog = (file) => {
+  getTime()
   if (fs.existsSync(file)) {
     console.log(time + " - " + file + " exists");
   } else {
@@ -42,6 +48,7 @@ const createLog = (file) => {
 };
 
 const writeLog = (file, source, logmsg) => {
+  getTime()
   msgwrite = time + " - " + source + " - " + logmsg;
   fs.appendFile(file, msgwrite + "\n", function (err, result) {
     if (err) console.log("error", err);
@@ -66,6 +73,7 @@ const getApiKey = () => {
   });
 };
 
+getTime(); // Get correct current time on startup
 loadReadme(); // Load readme file to memory
 createLog(infolog); //Create info.log if not exists
 readLog(infolog, "info"); //Read info.log to memory if exists
@@ -210,6 +218,7 @@ app.get("/api/log/err", (req, res) => {
 });
 
 app.post("/api/log/info", urlencodedParser, function (req, res) {
+  getTime()
   if (req.header("x-api-key") === readApiKey[0].key) {
     response = {
       info: req.body.info,
@@ -226,6 +235,7 @@ app.post("/api/log/info", urlencodedParser, function (req, res) {
 });
 
 app.post("/api/log/err", urlencodedParser, function (req, res) {
+  getTime()
   if (req.header("x-api-key") === readApiKey[0].key) {
     response = {
       err: req.body.err,
@@ -242,5 +252,6 @@ app.post("/api/log/err", urlencodedParser, function (req, res) {
 });
 
 app.listen(port, () => {
+  getTime()
   console.log(`${time} - APILogger listening on port ${port}`);
 });
