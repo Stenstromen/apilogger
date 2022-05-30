@@ -16,7 +16,7 @@ const port = 8080;
 const getTime = () => {
   const dateObj = new Date();
   let year = dateObj.getFullYear();
-  let month = dateObj.getMonth();
+  let month = dateObj.getMonth() + 1;
   let date = dateObj.getDate();
   let hour = dateObj.getHours();
   let minute = dateObj.getMinutes();

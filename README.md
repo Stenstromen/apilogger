@@ -54,7 +54,7 @@ POST
 * Write API Readme
 * API Key requirement
 * API GET logfile (with limit=rows PARAM)
+* Fix time logic... (Incorrect month)
 
 ## Todo
 * Code Cleanup!
-* Fix time logic... (Incorrect month)
