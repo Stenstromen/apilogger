@@ -25,6 +25,12 @@ minute = ("0" + minute).slice(-2);
 second = ("0" + second).slice(-2);
 const time = `${year}-${month}-${date} ${hour}:${minute}:${second}`;
 
+const loadReadme = () => {
+  fs.readFile(readme, "utf8", (err, data) => {
+    printReadme = data;
+  });
+}
+
 const createLog = (file) => {
   if (fs.existsSync(file)) {
     console.log(time + " - " + file + " exists");
@@ -60,6 +66,7 @@ const getApiKey = () => {
   });
 };
 
+loadReadme(); // Load readme file to memory
 createLog(infolog); //Create info.log if not exists
 readLog(infolog, "info"); //Read info.log to memory if exists
 createLog(errlog); //Create err.log if not exists
@@ -73,19 +80,67 @@ app.get("/", (req, res) => {
   res.redirect("/api/readme");
 });
 
+app.get("/api", (req, res) => {
+  res.redirect("/api/readme");
+})
+
 app.get("/api/readme", (req, res) => {
-  fs.readFile(readme, "utf8", (err, data) => {
-    printReadme = data;
-  });
   res.write(printReadme);
   res.end();
 });
 
 app.get("/api/log/info", (req, res) => {
   if (req.header("x-api-key") === readApiKey[0].key) {
-    console.log("Key correct");
-    readLog(infolog, "info");
-    res.write(readInfoLog);
+    if (req.query.order === "asc" && req.query.limit) {
+      let linesToRead = parseInt(req.query.limit - 1);
+      let arrInfo = [];
+      let limitResInfo = [];
+      const lineByLine = fs.readFileSync(infolog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arrInfo.push(line);
+      });
+      for (let i = 0; i < linesToRead + 1; i++) {
+        limitResInfo.push(arrInfo[i]);
+      }
+      res.write(limitResInfo.join("\n"));
+    } else if (req.query.order === "dec" && req.query.limit) {
+      let linesToRead = parseInt(req.query.limit - 1);
+      let arrInfo = [];
+      let limitResInfo = [];
+      const lineByLine = fs.readFileSync(infolog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arrInfo.push(line);
+      });
+      for (let i = 0; i < linesToRead + 1; i++) {
+        limitResInfo.push(arrInfo[i]);
+      }
+      limitResInfo = limitResInfo.reverse();
+      res.write(limitResInfo.join("\n"));
+    } else if (req.query.order === "dec") {
+      let arrInfo = [];
+      const lineByLine = fs.readFileSync(infolog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arrInfo.push(line);
+      });
+      arrInfo = arrInfo.reverse();
+      res.write(arrInfo.join("\n"));
+    } else if (req.query.limit) {
+      let linesToRead = parseInt(req.query.limit - 1);
+      let arrInfo = [];
+      let limitResInfo = [];
+      const lineByLine = fs.readFileSync(infolog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arrInfo.push(line);
+      });
+      for (let i = 0; i < linesToRead + 1; i++) {
+        limitResInfo.push(arrInfo[i]);
+      }
+      res.write(limitResInfo.join("\n"));
+    } else {
+      console.log("Key correct");
+      readLog(infolog, "info");
+      res.write(readInfoLog);
+    }
   } else {
     console.log("Key INCORRECT");
     res.statusCode = 401;
@@ -96,8 +151,56 @@ app.get("/api/log/info", (req, res) => {
 
 app.get("/api/log/err", (req, res) => {
   if (req.header("x-api-key") === readApiKey[0].key) {
-    readLog(errlog, "err");
-    res.write(readErrLog);
+    if (req.query.order === "asc" && req.query.limit) {
+      let linesToRead = parseInt(req.query.limit - 1);
+      let arr = [];
+      let limitRes = [];
+      const lineByLine = fs.readFileSync(errlog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arr.push(line);
+      });
+      for (let i = 0; i < linesToRead + 1; i++) {
+        limitRes.push(arr[i]);
+      }
+      res.write(limitRes.join("\n"));
+    } else if (req.query.order === "dec" && req.query.limit) {
+      let linesToRead = parseInt(req.query.limit - 1);
+      let arr = [];
+      let limitRes = [];
+      const lineByLine = fs.readFileSync(errlog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arr.push(line);
+      });
+      for (let i = 0; i < linesToRead + 1; i++) {
+        limitRes.push(arr[i]);
+      }
+      limitRes = limitRes.reverse();
+      res.write(limitRes.join("\n"));
+    } else if (req.query.order === "dec") {
+      let arr = [];
+      const lineByLine = fs.readFileSync(errlog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arr.push(line);
+      });
+      arr = arr.reverse();
+      res.write(arr.join("\n"));
+    } else if (req.query.limit) {
+      let linesToRead = parseInt(req.query.limit - 1);
+      let arr = [];
+      let limitRes = [];
+      const lineByLine = fs.readFileSync(errlog, "utf8");
+      lineByLine.split(/\r?\n/).forEach((line) => {
+        arr.push(line);
+      });
+      for (let i = 0; i < linesToRead + 1; i++) {
+        limitRes.push(arr[i]);
+      }
+      res.write(limitRes.join("\n"));
+    } else {
+      console.log("Key correct");
+      readLog(errlog, "err");
+      res.write(readErrLog);
+    }
   } else {
     console.log("Key INCORRECT");
     res.statusCode = 401;
