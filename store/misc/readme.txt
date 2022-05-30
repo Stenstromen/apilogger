@@ -17,8 +17,8 @@ GET
 /api/log/err?order=asc  - Error Log in ascending order (default)
 /api/log/err?order=dec  - Error Log in descending order
 
-/api/log/info?limit=NUM - Limit Informational Log output to NUM rows (can be compined with asc/dec)
-/api/log/err?limit=NUM  - Limit Error Log output to NUM rows (can be compined with asc/dec)
+/api/log/info?limit=NUM - Limit Informational Log output to NUM rows (can be combined with asc/dec)
+/api/log/err?limit=NUM  - Limit Error Log output to NUM rows (can be combined with asc/dec)
 
 POST
 /api/log/info           - Add Informational log message in format:\
