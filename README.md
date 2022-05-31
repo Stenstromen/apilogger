@@ -4,12 +4,64 @@ APILogger node.js project.
 Log data to textfiles, from HTTP POST requests
 
 ## Docker
-### Docker run persistent storage (placeholder)
+
+Demo available at Stenstromen/apilogger. (linux/arm64)
+
 ```
-docker run -d --rm -p 8080:8080 \
--v /path/to/dir:/usr/src/app/store/logs \
-REGISTRY/APILOGGER
+docker run -d --rm -p 80:8080 stenstromen/apilogger:latest
+curl http://localhost/api/readme
 ```
+
+### Persistent storage
+```
+mkdir logs
+```
+```
+docker run -d --rm -p 80:8080 \
+-v $PWD/logs:/usr/src/app/store/logs \
+stenstromen/apilogger:latest
+```
+```
+tail -f logs/info.log
+```
+
+### Persistent storage with provided API-key
+```
+mkdir -p store/logs store/misc 
+```
+```
+echo '[{"key": "secret-key-yo"}]' > store/misc/apikey.js
+```
+```
+docker run -d --rm -p 80:8080 \
+-v $PWD/store/logs:/usr/src/app/store/logs \
+-v $PWD/store/misc/apikey.js:/usr/src/app/store/misc/apikey.js \
+stenstromen/apilogger:latest
+```
+
+### Roll your own
+
+Clone 
+```
+git clone https://github.com/Stenstromen/apilogger.git
+```
+
+Build
+```
+docker build -t apilogger apilogger/.
+```
+
+Run
+```
+docker run -d --rm -p 80:8080 apilogger
+```
+
+Test
+```
+curl http://localhost/api/readme
+```
+
+### 
 
 ## Quickstart
 ```
