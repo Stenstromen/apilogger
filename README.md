@@ -61,7 +61,11 @@ Test
 curl http://localhost/api/readme
 ```
 
-### 
+### Kubernetes Deployment
+```
+kubectl apply -f https://raw.githubusercontent.com/Stenstromen/apilogger/main/k8s_deploy.yml
+curl http://Cluster-IP:31337
+```
 
 ## Quickstart
 ```
