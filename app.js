@@ -145,12 +145,10 @@ app.get("/api/log/info", (req, res) => {
       }
       res.write(limitResInfo.join("\n"));
     } else {
-      console.log("Key correct");
       readLog(infolog, "info");
       res.write(readInfoLog);
     }
   } else {
-    console.log("Key INCORRECT");
     res.statusCode = 401;
     res.send("unauthorized");
   }
@@ -205,12 +203,10 @@ app.get("/api/log/err", (req, res) => {
       }
       res.write(limitRes.join("\n"));
     } else {
-      console.log("Key correct");
       readLog(errlog, "err");
       res.write(readErrLog);
     }
   } else {
-    console.log("Key INCORRECT");
     res.statusCode = 401;
     res.send("unauthorized");
   }
@@ -227,7 +223,6 @@ app.post("/api/log/info", urlencodedParser, function (req, res) {
     readLog(infolog, "info");
     res.statusCode = 201;
   } else {
-    console.log("Key INCORRECT");
     res.statusCode = 401;
     res.send("unauthorized");
   }
@@ -244,7 +239,6 @@ app.post("/api/log/err", urlencodedParser, function (req, res) {
     readLog(errlog, "err");
     res.statusCode = 201;
   } else {
-    console.log("Key INCORRECT");
     res.statusCode = 401;
     res.send("unauthorized");
   }
