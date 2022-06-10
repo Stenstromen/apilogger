@@ -116,3 +116,9 @@ POST
 
 ## Todo
 * Code Cleanup!
+
+## Todo 2.0
+* Rewrite server to follow MVC model
+* Input validation with express-validator
+* Add proper API key req (jwt, jsonwebtoken)
+* Use SQLite for user mgmt
